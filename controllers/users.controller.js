@@ -1,7 +1,9 @@
 const fs = require('fs');
+const path = require('path');
 
 module.exports.getAll = (req, res) => {
-    fs.readFile('data/user-data.json', (err, data) => {
+    const file = path.join(process.cwd(), 'data', 'user-data.json');
+    fs.readFile(file, (err, data) => {
         if (err) {
             console.error(err);
             return res.status(500).send('Error reading data file');
@@ -16,7 +18,8 @@ module.exports.getAll = (req, res) => {
 }
 
 module.exports.randomUser = (req, res) => {
-    fs.readFile('data/user-data.json', (err, data) => {
+    const file = path.join(process.cwd(), 'data', 'user-data.json');
+    fs.readFile(file, (err, data) => {
         if (err) {
             console.error(err);
             return res.status(500).send('Error reading data file');
@@ -35,9 +38,11 @@ module.exports.save = (req, res) => {
         return res.status(500).send('Provide all the information');
     }
 
-    const users = JSON.parse(fs.readFileSync('data/user-data.json', 'utf8'));
+    const file = path.join(process.cwd(), 'data', 'user-data.json');
+
+    const users = JSON.parse(fs.readFileSync(file, 'utf8'));
     users.push(data);
-    fs.writeFile('data/user-data.json', JSON.stringify(users), 'utf8', (err) => {
+    fs.writeFile(file, JSON.stringify(users), 'utf8', (err) => {
         if (err) {
             return res.status(500).send('Error writing data file');
         }
@@ -50,7 +55,9 @@ module.exports.update = (req, res) => {
     const data = req.body;
     const { name, gender, contact, address, photoUrl } = data;
 
-    fs.readFile('data/user-data.json', (err, data) => {
+    const file = path.join(process.cwd(), 'data', 'user-data.json');
+
+    fs.readFile(file, (err, data) => {
         const users = JSON.parse(data);
 
         // find the index of the users data with the specified id
@@ -79,7 +86,7 @@ module.exports.update = (req, res) => {
                 }
             }
         });
-        fs.writeFileSync('data/user-data.json', JSON.stringify(users));
+        fs.writeFileSync(file, JSON.stringify(users));
         res.status(204).send('Update successfully');
     })
 }
@@ -91,7 +98,8 @@ module.exports.bulkUpdate = (req, res) => {
 module.exports.delete = (req, res) => {
     const id = req.params.id;
 
-    fs.readFile('data/user-data.json', (err, data) => {
+    const file = path.join(process.cwd(), 'data', 'user-data.json');
+    fs.readFile(file, (err, data) => {
         const users = JSON.parse(data);
         // find the index of the users data with the specified id
         const index = users.findIndex(obj => obj.Id === id);
@@ -99,7 +107,7 @@ module.exports.delete = (req, res) => {
         // remove and update the users
         if (index !== -1) {
             users.splice(index, 1);
-            fs.writeFileSync('data/user-data.json', JSON.stringify(users));
+            fs.writeFileSync(file, JSON.stringify(users));
             res.status(204).end()
         } else {
             res.status(404).send('Data not found by id')
