@@ -46,10 +46,6 @@ This is a random user api without server
 ```
 
 
-#### add(num1, num2)
-
-Takes two numbers and returns the sum.
-
 
 ## Authors
 
