@@ -21,7 +21,18 @@ router.get('/random', usersController.randomUser);
 router.post('/save', usersController.save);
 
 /**
- * delete the user by its id
+ * Update a user by Id
+ */
+router.patch('/update/:id', usersController.update);
+
+/**
+ * Bulk-Update by user id array
+ * user id's array pass in body
+ */
+router.patch('/bulk-update', usersController.bulkUpdate);
+
+/**
+ * delete the user by its Id
  */
 router.delete('/delete/:id', usersController.delete)
 

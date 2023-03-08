@@ -45,6 +45,49 @@ module.exports.save = (req, res) => {
     });
 }
 
+module.exports.update = (req, res) => {
+    const id = req.params.id;
+    const data = req.body;
+    const { name, gender, contact, address, photoUrl } = data;
+
+    fs.readFile('data.json', (err, data) => {
+        const users = JSON.parse(data);
+
+        // find the index of the users data with the specified id
+        const index = users.findIndex(obj => obj.Id === id);
+
+        // remove and update the users
+        if (index === -1) {
+            res.status(404).send('Id not found')
+        }
+        users.forEach(user => {
+            if (user.Id === id) {
+                if (name) {
+                    user.name = name; // update name property of object with id
+                }
+                if (gender) {
+                    user.gender = gender; // update gender property of object with id
+                }
+                if (contact) {
+                    user.contact = contact; // update contact property of object with id
+                }
+                if (address) {
+                    user.address = address; // update address property of object with id
+                }
+                if (photoUrl) {
+                    user.photoUrl = photoUrl; // update photoUrl property of object with id
+                }
+            }
+        });
+        fs.writeFileSync('data.json', JSON.stringify(users));
+        res.status(204).send('Update successfully');
+    })
+}
+
+module.exports.bulkUpdate = (req, res) => {
+    res.send('This api is underconstruction...')
+}
+
 module.exports.delete = (req, res) => {
     const id = req.params.id;
 
